@@ -129,3 +129,62 @@ void BFS(State start){
         }
     }
 }
+
+// ================= DFS =================
+bool DFS_util(State cur, State visited[], int &vsize){
+    if(exists(visited,vsize,cur)) return false;
+
+    visited[vsize]=cur;
+    int currentIndex=vsize;
+    vsize++;
+
+    cout<<"Visited: ";
+    printState(cur);
+
+    if(isGoal(cur)){
+    cout<<"\nGoal reached!\n";
+    cout<<"\n===== FINAL PATH =====\n";
+    printPath(visited,currentIndex);
+
+    int cost=0, temp=currentIndex;
+    while(temp!=-1){
+        cost++;
+        temp=visited[temp].parent;
+    }
+    cout<<"Cost: "<<cost-1<<"\n";
+    return true;
+}
+
+    if(cur.fuel<=0){
+        vsize--; // backtrack
+        return false;
+    }
+
+    int dx[4]={1,-1,0,0};
+    int dy[4]={0,0,1,-1};
+
+    for(int i=0;i<4;i++){
+        int nx=cur.x+dx[i];
+        int ny=cur.y+dy[i];
+
+        if(valid(nx,ny)){
+            State next = move(cur,dx[i],dy[i]);
+            next.parent=currentIndex;
+
+            if(DFS_util(next,visited,vsize))
+                return true;
+        }
+    }
+
+    vsize--; 
+    return false;
+}
+void DFS(State start){
+    State visited[MAX];
+    int vsize=0;
+
+    start.parent=-1;
+
+    cout<<"\n===== DFS =====\n";
+    DFS_util(start,visited,vsize);
+}
