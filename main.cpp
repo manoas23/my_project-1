@@ -69,3 +69,63 @@ bool exists(State arr[], int size, State s){
     }
     return false;
 }
+// ================= BFS =================
+void BFS(State start){
+    State queue[MAX];
+    State visited[MAX];
+
+    int front=0,rear=0,vsize=0;
+
+    start.parent=-1;
+    queue[rear++]=start;
+
+    cout<<"\n===== BFS =====\n";
+
+    while(front<rear){
+        State cur = queue[front++];
+
+        if(exists(visited,vsize,cur)) continue;
+
+        visited[vsize]=cur;
+        int currentIndex=vsize;
+
+        cout<<"Visited: ";
+        printState(cur);
+
+        if(isGoal(cur)){
+    cout<<"\nGoal reached!\n";
+    cout<<"\n===== FINAL PATH =====\n";
+    printPath(visited,currentIndex);
+
+    int cost=0, temp=currentIndex;
+    while(temp!=-1){
+        cost++;
+        temp=visited[temp].parent;
+    }
+    cout<<"Cost: "<<cost-1<<"\n";
+    return;
+}
+
+        vsize++;
+
+        if(cur.fuel<=0) continue;
+
+        int dx[4]={1,-1,0,0};
+        int dy[4]={0,0,1,-1};
+
+        for(int i=0;i<4;i++){
+            int nx=cur.x+dx[i];
+            int ny=cur.y+dy[i];
+
+            if(valid(nx,ny)){
+                State next = move(cur,dx[i],dy[i]);
+
+                if(!exists(visited,vsize,next) &&
+                   !exists(queue,rear,next)){
+                    next.parent=currentIndex;
+                    queue[rear++]=next;
+                }
+            }
+        }
+    }
+}
